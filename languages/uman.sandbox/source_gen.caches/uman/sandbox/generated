@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<product version="3" modelHash="-4m7zyv0w0ysljt3x27yhcr60e1xk1ft">
+  <files dir="sql/" names="user_management_sql.sql" />
+</product>
+
