@@ -12,6 +12,9 @@ import jetbrains.mps.lang.smodel.ConceptSwitchIndexBuilder;
 import jetbrains.mps.smodel.adapter.ids.MetaIdFactory;
 
 public final class BehaviorAspectDescriptor extends BaseBehaviorAspectDescriptor {
+  private final BHDescriptor mySchema__BehaviorDescriptor = new Schema__BehaviorDescriptor();
+  private final BHDescriptor myField__BehaviorDescriptor = new Field__BehaviorDescriptor();
+  private final BHDescriptor myFieldRefrence__BehaviorDescriptor = new FieldRefrence__BehaviorDescriptor();
   private final BHDescriptor mySQL__BehaviorDescriptor = new SQL__BehaviorDescriptor();
 
   public BehaviorAspectDescriptor() {
@@ -22,10 +25,16 @@ public final class BehaviorAspectDescriptor extends BaseBehaviorAspectDescriptor
     SAbstractConcept cncpt = concept;
     switch (conceptIndex.index(cncpt)) {
       case 0:
+        return myField__BehaviorDescriptor;
+      case 1:
+        return myFieldRefrence__BehaviorDescriptor;
+      case 2:
         return mySQL__BehaviorDescriptor;
+      case 3:
+        return mySchema__BehaviorDescriptor;
       default:
     }
     return null;
   }
-  private static final ConceptSwitchIndex conceptIndex = new ConceptSwitchIndexBuilder().put(MetaIdFactory.conceptId(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b625dc7L)).seal();
+  private static final ConceptSwitchIndex conceptIndex = new ConceptSwitchIndexBuilder().put(MetaIdFactory.conceptId(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8cdL), MetaIdFactory.conceptId(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4cbd4dL), MetaIdFactory.conceptId(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b625dc7L), MetaIdFactory.conceptId(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c9L)).seal();
 }

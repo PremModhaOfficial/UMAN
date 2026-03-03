@@ -9,23 +9,27 @@ import org.jetbrains.mps.openapi.language.SAbstractConcept;
 
 public final class LanguageConceptSwitch {
   private final LanguageConceptIndex myIndex;
-  public static final int Field = 0;
-  public static final int FieldProperties = 1;
-  public static final int FieldRefrence = 2;
-  public static final int Field_PlaceHolder = 3;
-  public static final int ModelSchema = 4;
-  public static final int Models = 5;
-  public static final int SQL = 6;
+  public static final int Code = 0;
+  public static final int Field = 1;
+  public static final int FieldProperties = 2;
+  public static final int FieldRefrence = 3;
+  public static final int Field_PlaceHolder = 4;
+  public static final int Infra = 5;
+  public static final int Models = 6;
+  public static final int SQL = 7;
+  public static final int Schema = 8;
 
   public LanguageConceptSwitch() {
     LanguageConceptIndexBuilder builder = new LanguageConceptIndexBuilder(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL);
+    builder.put(0x4dd4c568a0f090c5L, Code);
     builder.put(0x6dd41c940b4ca8cdL, Field);
     builder.put(0x6dd41c940b54a902L, FieldProperties);
     builder.put(0x6dd41c940b4cbd4dL, FieldRefrence);
     builder.put(0x6dd41c940b4d9b81L, Field_PlaceHolder);
-    builder.put(0x6dd41c940b4ca8c9L, ModelSchema);
+    builder.put(0x4dd4c568a0f090cbL, Infra);
     builder.put(0x6dd41c940b4ca8c6L, Models);
     builder.put(0x6dd41c940b625dc7L, SQL);
+    builder.put(0x6dd41c940b4ca8c9L, Schema);
     myIndex = builder.seal();
   }
 

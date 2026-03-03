@@ -5,29 +5,37 @@ package uman.behavior;
 import jetbrains.mps.core.aspects.behaviour.BaseBHDescriptor;
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
-import java.util.List;
 import jetbrains.mps.core.aspects.behaviour.api.SMethod;
+import jetbrains.mps.core.aspects.behaviour.SMethodBuilder;
+import jetbrains.mps.core.aspects.behaviour.SJavaCompoundTypeImpl;
+import jetbrains.mps.core.aspects.behaviour.AccessPrivileges;
+import java.util.List;
 import java.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.mps.openapi.model.SNode;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SPropertyOperations;
 import jetbrains.mps.core.aspects.behaviour.api.SConstructor;
 import org.jetbrains.annotations.Nullable;
 import jetbrains.mps.core.aspects.behaviour.api.BHMethodNotFoundException;
+import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SProperty;
 
-public final class SQL__BehaviorDescriptor extends BaseBHDescriptor {
-  private static final SAbstractConcept CONCEPT = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b625dc7L, "uman.structure.SQL");
+public final class FieldRefrence__BehaviorDescriptor extends BaseBHDescriptor {
+  private static final SAbstractConcept CONCEPT = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4cbd4dL, "uman.structure.FieldRefrence");
 
+  public static final SMethod<String> pascalName_id4RkLmywXs7j = new SMethodBuilder<String>(new SJavaCompoundTypeImpl(String.class)).name("pascalName").modifiers(0, AccessPrivileges.PUBLIC).concept(CONCEPT).baseMethodId(5608324489150841299L).languageId(0xa4526f9ea85ed21fL, 0x1347621f0e534de9L).build2();
 
-  private static final List<SMethod<?>> BH_METHODS = Arrays.<SMethod<?>>asList();
+  private static final List<SMethod<?>> BH_METHODS = Arrays.<SMethod<?>>asList(pascalName_id4RkLmywXs7j);
 
   private static void ___init___(@NotNull SNode __thisNode__) {
-    SPropertyOperations.set(__thisNode__, PROPS.name$MnvL, "SQL");
   }
 
+  /*package*/ static String pascalName_id4RkLmywXs7j(@NotNull SNode __thisNode__) {
+    return (String) Schema__BehaviorDescriptor.pascalCase_id4RkLmywWHtP.invoke(SNodeOperations.getNodeAncestor(__thisNode__, CONCEPTS.Schema$WM, false, false), SPropertyOperations.getString(__thisNode__, PROPS.name$MnvL));
+  }
 
-  /*package*/ SQL__BehaviorDescriptor() {
+  /*package*/ FieldRefrence__BehaviorDescriptor() {
   }
 
   @Override
@@ -42,6 +50,8 @@ public final class SQL__BehaviorDescriptor extends BaseBHDescriptor {
       throw new BHMethodNotFoundException(this, method);
     }
     switch (methodIndex) {
+      case 0:
+        return (T) ((String) pascalName_id4RkLmywXs7j(node));
       default:
         throw new BHMethodNotFoundException(this, method);
     }
@@ -69,6 +79,10 @@ public final class SQL__BehaviorDescriptor extends BaseBHDescriptor {
   @Override
   public SAbstractConcept getConcept() {
     return CONCEPT;
+  }
+
+  private static final class CONCEPTS {
+    /*package*/ static final SConcept Schema$WM = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c9L, "uman.structure.Schema");
   }
 
   private static final class PROPS {

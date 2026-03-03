@@ -16,13 +16,15 @@ import jetbrains.mps.smodel.adapter.ids.MetaIdFactory;
 import jetbrains.mps.smodel.adapter.ids.PrimitiveTypeId;
 
 public class StructureAspectDescriptor extends BaseStructureAspectDescriptor {
+  /*package*/ final ConceptDescriptor myConceptCode = createDescriptorForCode();
   /*package*/ final ConceptDescriptor myConceptField = createDescriptorForField();
   /*package*/ final ConceptDescriptor myConceptFieldProperties = createDescriptorForFieldProperties();
   /*package*/ final ConceptDescriptor myConceptFieldRefrence = createDescriptorForFieldRefrence();
   /*package*/ final ConceptDescriptor myConceptField_PlaceHolder = createDescriptorForField_PlaceHolder();
-  /*package*/ final ConceptDescriptor myConceptModelSchema = createDescriptorForModelSchema();
+  /*package*/ final ConceptDescriptor myConceptInfra = createDescriptorForInfra();
   /*package*/ final ConceptDescriptor myConceptModels = createDescriptorForModels();
   /*package*/ final ConceptDescriptor myConceptSQL = createDescriptorForSQL();
+  /*package*/ final ConceptDescriptor myConceptSchema = createDescriptorForSchema();
   /*package*/ final EnumerationDescriptor myEnumerationDataType = new EnumerationDescriptor_DataType();
   private final LanguageConceptSwitch myIndexSwitch;
 
@@ -38,13 +40,15 @@ public class StructureAspectDescriptor extends BaseStructureAspectDescriptor {
 
   @Override
   public Collection<ConceptDescriptor> getDescriptors() {
-    return Arrays.asList(myConceptField, myConceptFieldProperties, myConceptFieldRefrence, myConceptField_PlaceHolder, myConceptModelSchema, myConceptModels, myConceptSQL);
+    return Arrays.asList(myConceptCode, myConceptField, myConceptFieldProperties, myConceptFieldRefrence, myConceptField_PlaceHolder, myConceptInfra, myConceptModels, myConceptSQL, myConceptSchema);
   }
 
   @Override
   @Nullable
   public ConceptDescriptor getDescriptor(SConceptId id) {
     switch (myIndexSwitch.index(id)) {
+      case LanguageConceptSwitch.Code:
+        return myConceptCode;
       case LanguageConceptSwitch.Field:
         return myConceptField;
       case LanguageConceptSwitch.FieldProperties:
@@ -53,12 +57,14 @@ public class StructureAspectDescriptor extends BaseStructureAspectDescriptor {
         return myConceptFieldRefrence;
       case LanguageConceptSwitch.Field_PlaceHolder:
         return myConceptField_PlaceHolder;
-      case LanguageConceptSwitch.ModelSchema:
-        return myConceptModelSchema;
+      case LanguageConceptSwitch.Infra:
+        return myConceptInfra;
       case LanguageConceptSwitch.Models:
         return myConceptModels;
       case LanguageConceptSwitch.SQL:
         return myConceptSQL;
+      case LanguageConceptSwitch.Schema:
+        return myConceptSchema;
       default:
         return null;
     }
@@ -73,6 +79,15 @@ public class StructureAspectDescriptor extends BaseStructureAspectDescriptor {
     return myIndexSwitch.index(c);
   }
 
+  private static ConceptDescriptor createDescriptorForCode() {
+    ConceptDescriptorBuilder2 b = new ConceptDescriptorBuilder2("uman", "Code", 0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x4dd4c568a0f090c5L);
+    b.class_(false, false, true);
+    b.origin("r:22b0f938-2771-480c-8e65-411380d57efc(uman.structure)/5608324489150501061");
+    b.version(3);
+    b.associate("models", 0x4dd4c568a0f090c9L).target(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c6L).optional(false).origin("5608324489150501065").done();
+    b.associate("infra", 0x4dd4c568a0f090caL).target(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x4dd4c568a0f090cbL).optional(false).origin("5608324489150501066").done();
+    return b.create();
+  }
   private static ConceptDescriptor createDescriptorForField() {
     ConceptDescriptorBuilder2 b = new ConceptDescriptorBuilder2("uman", "Field", 0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8cdL);
     b.class_(false, false, false);
@@ -117,13 +132,16 @@ public class StructureAspectDescriptor extends BaseStructureAspectDescriptor {
     b.version(3);
     return b.create();
   }
-  private static ConceptDescriptor createDescriptorForModelSchema() {
-    ConceptDescriptorBuilder2 b = new ConceptDescriptorBuilder2("uman", "ModelSchema", 0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c9L);
-    b.class_(false, false, false);
-    b.parent(0xceab519525ea4f22L, 0x9b92103b95ca8c0cL, 0x110396eaaa4L);
-    b.origin("r:22b0f938-2771-480c-8e65-411380d57efc(uman.structure)/7913981867367114953");
+  private static ConceptDescriptor createDescriptorForInfra() {
+    ConceptDescriptorBuilder2 b = new ConceptDescriptorBuilder2("uman", "Infra", 0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x4dd4c568a0f090cbL);
+    b.class_(false, false, true);
+    b.origin("r:22b0f938-2771-480c-8e65-411380d57efc(uman.structure)/5608324489150501067");
     b.version(3);
-    b.aggregate("Fields", 0x6dd41c940b4ca8ccL).target(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4d9b81L).optional(false).ordered(true).multiple(true).origin("7913981867367114956").done();
+    b.property("port", 0x4dd4c568a0f2d709L).type(PrimitiveTypeId.INTEGER).origin("5608324489150650121").done();
+    b.property("modulePath", 0x4dd4c568a0f2d70aL).type(PrimitiveTypeId.STRING).origin("5608324489150650122").done();
+    b.property("db_user", 0x4dd4c568a0f2d70dL).type(PrimitiveTypeId.STRING).origin("5608324489150650125").done();
+    b.property("db_pass", 0x4dd4c568a0f2d70fL).type(PrimitiveTypeId.STRING).origin("5608324489150650127").done();
+    b.property("db_name", 0x4dd4c568a0f2d711L).type(PrimitiveTypeId.STRING).origin("5608324489150650129").done();
     return b.create();
   }
   private static ConceptDescriptor createDescriptorForModels() {
@@ -142,6 +160,15 @@ public class StructureAspectDescriptor extends BaseStructureAspectDescriptor {
     b.origin("r:22b0f938-2771-480c-8e65-411380d57efc(uman.structure)/7913981867368537543");
     b.version(3);
     b.associate("targetScemaFilde", 0x6dd41c940b625dc8L).target(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c6L).optional(false).origin("7913981867368537544").done();
+    return b.create();
+  }
+  private static ConceptDescriptor createDescriptorForSchema() {
+    ConceptDescriptorBuilder2 b = new ConceptDescriptorBuilder2("uman", "Schema", 0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c9L);
+    b.class_(false, false, false);
+    b.parent(0xceab519525ea4f22L, 0x9b92103b95ca8c0cL, 0x110396eaaa4L);
+    b.origin("r:22b0f938-2771-480c-8e65-411380d57efc(uman.structure)/7913981867367114953");
+    b.version(3);
+    b.aggregate("Fields", 0x6dd41c940b4ca8ccL).target(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4d9b81L).optional(false).ordered(true).multiple(true).origin("7913981867367114956").done();
     return b.create();
   }
 }

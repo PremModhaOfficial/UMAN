@@ -9,19 +9,28 @@ import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import jetbrains.mps.smodel.runtime.ConceptPresentationBuilder;
 
 public class ConceptPresentationAspectImpl extends ConceptPresentationAspectBase {
+  private ConceptPresentation props_Code;
   private ConceptPresentation props_Field;
   private ConceptPresentation props_FieldProperties;
   private ConceptPresentation props_FieldRefrence;
   private ConceptPresentation props_Field_PlaceHolder;
-  private ConceptPresentation props_ModelSchema;
+  private ConceptPresentation props_Infra;
   private ConceptPresentation props_Models;
   private ConceptPresentation props_SQL;
+  private ConceptPresentation props_Schema;
 
   @Override
   @Nullable
   public ConceptPresentation getDescriptor(SAbstractConcept c) {
     StructureAspectDescriptor structureDescriptor = (StructureAspectDescriptor) myLanguageRuntime.getAspect(jetbrains.mps.smodel.runtime.StructureAspectDescriptor.class);
     switch (structureDescriptor.internalIndex(c)) {
+      case LanguageConceptSwitch.Code:
+        if (props_Code == null) {
+          ConceptPresentationBuilder cpb = new ConceptPresentationBuilder();
+          cpb.rawPresentation("Code");
+          props_Code = cpb.create();
+        }
+        return props_Code;
       case LanguageConceptSwitch.Field:
         if (props_Field == null) {
           ConceptPresentationBuilder cpb = new ConceptPresentationBuilder();
@@ -48,13 +57,13 @@ public class ConceptPresentationAspectImpl extends ConceptPresentationAspectBase
           props_Field_PlaceHolder = cpb.create();
         }
         return props_Field_PlaceHolder;
-      case LanguageConceptSwitch.ModelSchema:
-        if (props_ModelSchema == null) {
+      case LanguageConceptSwitch.Infra:
+        if (props_Infra == null) {
           ConceptPresentationBuilder cpb = new ConceptPresentationBuilder();
-          cpb.presentationByName();
-          props_ModelSchema = cpb.create();
+          cpb.rawPresentation("Infra");
+          props_Infra = cpb.create();
         }
-        return props_ModelSchema;
+        return props_Infra;
       case LanguageConceptSwitch.Models:
         if (props_Models == null) {
           ConceptPresentationBuilder cpb = new ConceptPresentationBuilder();
@@ -69,6 +78,13 @@ public class ConceptPresentationAspectImpl extends ConceptPresentationAspectBase
           props_SQL = cpb.create();
         }
         return props_SQL;
+      case LanguageConceptSwitch.Schema:
+        if (props_Schema == null) {
+          ConceptPresentationBuilder cpb = new ConceptPresentationBuilder();
+          cpb.presentationByName();
+          props_Schema = cpb.create();
+        }
+        return props_Schema;
     }
     return null;
   }

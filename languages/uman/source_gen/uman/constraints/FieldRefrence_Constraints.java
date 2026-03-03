@@ -12,9 +12,9 @@ import jetbrains.mps.smodel.runtime.CheckingNodeContext;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SPropertyOperations;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SLinkOperations;
-import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.SNodePointer;
 import org.jetbrains.mps.openapi.language.SConcept;
 import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
@@ -39,15 +39,21 @@ public class FieldRefrence_Constraints extends BaseConstraintsDescriptor {
   }
 
   private static boolean staticCanBeAChild(SNode node, SNode parentNode, SAbstractConcept childConcept, SContainmentLink link) {
+    boolean allow = false;
 
-    boolean canNotBeChild = SPropertyOperations.getString(SLinkOperations.getTarget(node, LINKS.target_schema$EJM0), PROPS.name$MnvL) != SPropertyOperations.getString(SNodeOperations.getNodeAncestor(node, CONCEPTS.ModelSchema$WM, false, false), PROPS.name$MnvL);
-    return canNotBeChild;
+    {
+      final SNode schema = parentNode;
+      if (SNodeOperations.isInstanceOf(schema, CONCEPTS.Schema$WM)) {
+        allow = SPropertyOperations.getString(schema, PROPS.name$MnvL) != SPropertyOperations.getString(SLinkOperations.getTarget(node, LINKS.target_schema$EJM0), PROPS.name$MnvL);
+      }
+    }
+    return allow;
   }
-  private static final SNodePointer canBeChildBreakingPoint = new SNodePointer("r:d5a1c46f-39d0-4886-95dd-cb0bab44a512(uman.constraints)", "7913981867368442994");
+  private static final SNodePointer canBeChildBreakingPoint = new SNodePointer("r:d5a1c46f-39d0-4886-95dd-cb0bab44a512(uman.constraints)", "7913981867370570269");
 
   private static final class CONCEPTS {
     /*package*/ static final SConcept FieldRefrence$yH = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4cbd4dL, "uman.structure.FieldRefrence");
-    /*package*/ static final SConcept ModelSchema$WM = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c9L, "uman.structure.ModelSchema");
+    /*package*/ static final SConcept Schema$WM = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c9L, "uman.structure.Schema");
   }
 
   private static final class LINKS {

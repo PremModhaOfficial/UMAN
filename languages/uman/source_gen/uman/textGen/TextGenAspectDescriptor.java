@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import jetbrains.mps.text.rt.TextGenModelOutline;
 import org.jetbrains.mps.openapi.model.SNode;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SModelOperations;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import org.jetbrains.mps.openapi.language.SConcept;
 import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
 
@@ -23,6 +25,8 @@ public class TextGenAspectDescriptor extends TextGenAspectBase {
   @Override
   public TextGenDescriptor getDescriptor(@NotNull SAbstractConcept concept) {
     switch (myIndex.index(concept)) {
+      case LanguageConceptSwitch.Code:
+        return new Code_TextGen();
       case LanguageConceptSwitch.SQL:
         return new SQL_TextGen();
     }
@@ -38,13 +42,25 @@ public class TextGenAspectDescriptor extends TextGenAspectBase {
         outline.registerTextUnit((ext == null ? fname : (fname + '.' + ext)), getPath_SQL(root), root);
         continue;
       }
+      if (root.getConcept().equals(CONCEPTS.Code$8A)) {
+        String fname = getFileName_Code(root);
+        String ext = getFileExtension_Code(root);
+        outline.registerTextUnit((ext == null ? fname : (fname + '.' + ext)), root);
+        continue;
+      }
     }
   }
   private static String getFileName_SQL(SNode node) {
     return "user_management_sql";
   }
+  private static String getFileName_Code(SNode node) {
+    return SModelOperations.getModelName(SNodeOperations.getModel(node));
+  }
   private static String getFileExtension_SQL(SNode node) {
     return "sql";
+  }
+  private static String getFileExtension_Code(SNode node) {
+    return "go";
   }
   private static String getPath_SQL(SNode node) {
     return "sql/";
@@ -52,5 +68,6 @@ public class TextGenAspectDescriptor extends TextGenAspectBase {
 
   private static final class CONCEPTS {
     /*package*/ static final SConcept SQL$Ip = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b625dc7L, "uman.structure.SQL");
+    /*package*/ static final SConcept Code$8A = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x4dd4c568a0f090c5L, "uman.structure.Code");
   }
 }

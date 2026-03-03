@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <debug-info version="2">
+  <concept fqn="c:f3061a53-9226-4cc5-a443-f952ceaf5816/1082485599095:jetbrains.mps.baseLanguage.structure.BlockStatement" />
   <concept fqn="c:f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123140:jetbrains.mps.baseLanguage.structure.ConstructorDeclaration" />
   <concept fqn="c:f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123155:jetbrains.mps.baseLanguage.structure.ExpressionStatement" />
   <concept fqn="c:f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123159:jetbrains.mps.baseLanguage.structure.IfStatement" />
@@ -15,53 +16,61 @@
       <unit at="15,0,32,0" name="uman.constraints.ConstraintsAspectDescriptor" />
     </file>
   </root>
-  <root nodeRef="r:d5a1c46f-39d0-4886-95dd-cb0bab44a512(uman.constraints)/7913981867368442993">
+  <root nodeRef="r:d5a1c46f-39d0-4886-95dd-cb0bab44a512(uman.constraints)/7913981867370452871">
     <file name="FieldRefrence_Constraints.java">
-      <node id="7913981867368442993" at="25,87,26,50" concept="9" />
-      <node id="7913981867368442993" at="29,127,30,128" concept="4" />
-      <node id="7913981867368442993" at="30,128,31,0" concept="6" />
-      <node id="7913981867368442993" at="32,55,33,71" concept="1" />
-      <node id="7913981867368442993" at="34,9,35,0" concept="6" />
-      <node id="7913981867368442993" at="35,0,36,22" concept="5" />
-      <node id="7913981867368516484" at="41,128,42,0" concept="6" />
-      <node id="7913981867368516842" at="42,0,43,262" concept="4" />
-      <node id="7913981867368446770" at="43,262,44,25" concept="5" />
-      <node id="7913981867368442993" at="46,0,47,0" concept="7" trace="canBeChildBreakingPoint" />
-      <node id="7913981867368442993" at="49,0,50,0" concept="7" trace="FieldRefrence$yH" />
-      <node id="7913981867368442993" at="50,0,51,0" concept="7" trace="ModelSchema$WM" />
-      <node id="7913981867368442993" at="54,0,55,0" concept="7" trace="target_schema$EJM0" />
-      <node id="7913981867368442993" at="58,0,59,0" concept="7" trace="name$MnvL" />
-      <node id="7913981867368442993" at="31,0,34,9" concept="2" />
-      <node id="7913981867368442993" at="41,0,46,0" concept="8" trace="staticCanBeAChild#(Lorg/jetbrains/mps/openapi/model/SNode;Lorg/jetbrains/mps/openapi/model/SNode;Lorg/jetbrains/mps/openapi/language/SAbstractConcept;Lorg/jetbrains/mps/openapi/language/SContainmentLink;)Z" />
-      <node id="7913981867368442993" at="28,0,38,0" concept="3" trace="invoke#(Ljetbrains/mps/smodel/runtime/ConstraintContext_CanBeChild;Ljetbrains/mps/smodel/runtime/CheckingNodeContext;)Ljava/lang/Boolean;" />
-      <node id="7913981867368442993" at="26,50,38,7" concept="1" />
-      <node id="7913981867368442993" at="25,0,40,0" concept="0" trace="FieldRefrence_Constraints#(Ljetbrains/mps/smodel/runtime/ConstraintsDescriptorInitContext;)V" />
-      <scope id="7913981867368442993" at="32,55,33,71" />
-      <scope id="7913981867368442995" at="41,128,44,25">
-        <var name="canNotBeChild" id="7913981867368516843" />
+      <node id="7913981867370452871" at="25,87,26,50" concept="10" />
+      <node id="7913981867370452871" at="29,127,30,128" concept="5" />
+      <node id="7913981867370452871" at="30,128,31,0" concept="7" />
+      <node id="7913981867370452871" at="32,55,33,71" concept="2" />
+      <node id="7913981867370452871" at="34,9,35,0" concept="7" />
+      <node id="7913981867370452871" at="35,0,36,22" concept="6" />
+      <node id="7913981867370664244" at="41,128,42,26" concept="5" />
+      <node id="7913981867370672780" at="42,26,43,0" concept="7" />
+      <node id="7913981867370650711" at="44,5,45,38" concept="5" />
+      <node id="7913981867370651277" at="46,69,47,180" concept="2" />
+      <node id="7913981867370670888" at="49,5,50,17" concept="6" />
+      <node id="7913981867370452871" at="52,0,53,0" concept="8" trace="canBeChildBreakingPoint" />
+      <node id="7913981867370452871" at="55,0,56,0" concept="8" trace="FieldRefrence$yH" />
+      <node id="7913981867370452871" at="56,0,57,0" concept="8" trace="Schema$WM" />
+      <node id="7913981867370452871" at="60,0,61,0" concept="8" trace="target_schema$EJM0" />
+      <node id="7913981867370452871" at="64,0,65,0" concept="8" trace="name$MnvL" />
+      <node id="7913981867370452871" at="31,0,34,9" concept="3" />
+      <node id="7913981867370650711" at="45,38,48,7" concept="3" />
+      <node id="7913981867370650711" at="43,0,49,5" concept="0" />
+      <node id="7913981867370452871" at="28,0,38,0" concept="4" trace="invoke#(Ljetbrains/mps/smodel/runtime/ConstraintContext_CanBeChild;Ljetbrains/mps/smodel/runtime/CheckingNodeContext;)Ljava/lang/Boolean;" />
+      <node id="7913981867370452871" at="41,0,52,0" concept="9" trace="staticCanBeAChild#(Lorg/jetbrains/mps/openapi/model/SNode;Lorg/jetbrains/mps/openapi/model/SNode;Lorg/jetbrains/mps/openapi/language/SAbstractConcept;Lorg/jetbrains/mps/openapi/language/SContainmentLink;)Z" />
+      <node id="7913981867370452871" at="26,50,38,7" concept="2" />
+      <node id="7913981867370452871" at="25,0,40,0" concept="1" trace="FieldRefrence_Constraints#(Ljetbrains/mps/smodel/runtime/ConstraintsDescriptorInitContext;)V" />
+      <scope id="7913981867370452871" at="32,55,33,71" />
+      <scope id="7913981867370650713" at="46,69,47,180" />
+      <scope id="7913981867370650711" at="44,5,48,7">
+        <var name="schema" id="7913981867370650711" />
       </scope>
-      <scope id="7913981867368442993" at="41,0,46,0">
-        <var name="childConcept" id="7913981867368442993" />
-        <var name="link" id="7913981867368442993" />
-        <var name="node" id="7913981867368442993" />
-        <var name="parentNode" id="7913981867368442993" />
+      <scope id="7913981867370452871" at="29,127,36,22">
+        <var name="result" id="7913981867370452871" />
       </scope>
-      <scope id="7913981867368442993" at="29,127,36,22">
-        <var name="result" id="7913981867368442993" />
+      <scope id="7913981867370570270" at="41,128,50,17">
+        <var name="allow" id="7913981867370664247" />
       </scope>
-      <scope id="7913981867368442993" at="28,0,38,0">
-        <var name="checkingNodeContext" id="7913981867368442993" />
-        <var name="context" id="7913981867368442993" />
+      <scope id="7913981867370452871" at="28,0,38,0">
+        <var name="checkingNodeContext" id="7913981867370452871" />
+        <var name="context" id="7913981867370452871" />
       </scope>
-      <scope id="7913981867368442993" at="25,87,38,7" />
-      <scope id="7913981867368442993" at="25,0,40,0">
-        <var name="initContext" id="7913981867368442993" />
+      <scope id="7913981867370452871" at="41,0,52,0">
+        <var name="childConcept" id="7913981867370452871" />
+        <var name="link" id="7913981867370452871" />
+        <var name="node" id="7913981867370452871" />
+        <var name="parentNode" id="7913981867370452871" />
       </scope>
-      <unit id="7913981867368442993" at="53,0,56,0" name="uman.constraints.FieldRefrence_Constraints$LINKS" />
-      <unit id="7913981867368442993" at="57,0,60,0" name="uman.constraints.FieldRefrence_Constraints$PROPS" />
-      <unit id="7913981867368442993" at="48,0,52,0" name="uman.constraints.FieldRefrence_Constraints$CONCEPTS" />
-      <unit id="7913981867368442993" at="27,32,38,5" name="uman.constraints.FieldRefrence_Constraints$1" />
-      <unit id="7913981867368442993" at="24,0,61,0" name="uman.constraints.FieldRefrence_Constraints" />
+      <scope id="7913981867370452871" at="25,87,38,7" />
+      <scope id="7913981867370452871" at="25,0,40,0">
+        <var name="initContext" id="7913981867370452871" />
+      </scope>
+      <unit id="7913981867370452871" at="59,0,62,0" name="uman.constraints.FieldRefrence_Constraints$LINKS" />
+      <unit id="7913981867370452871" at="63,0,66,0" name="uman.constraints.FieldRefrence_Constraints$PROPS" />
+      <unit id="7913981867370452871" at="54,0,58,0" name="uman.constraints.FieldRefrence_Constraints$CONCEPTS" />
+      <unit id="7913981867370452871" at="27,32,38,5" name="uman.constraints.FieldRefrence_Constraints$1" />
+      <unit id="7913981867370452871" at="24,0,67,0" name="uman.constraints.FieldRefrence_Constraints" />
     </file>
   </root>
 </debug-info>

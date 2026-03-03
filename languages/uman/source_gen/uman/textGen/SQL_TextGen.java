@@ -6,68 +6,131 @@ import jetbrains.mps.text.rt.TextGenDescriptorBase;
 import jetbrains.mps.text.rt.TextGenContext;
 import jetbrains.mps.text.impl.TextGenSupport;
 import org.jetbrains.mps.openapi.model.SNode;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SLinkOperations;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SPropertyOperations;
+import jetbrains.mps.internal.collections.runtime.ListSequence;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
+import jetbrains.mps.lang.smodel.EnumerationLiteralsIndex;
+import org.jetbrains.mps.openapi.language.SReferenceLink;
+import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
+import org.jetbrains.mps.openapi.language.SContainmentLink;
+import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.language.SConcept;
 
 public class SQL_TextGen extends TextGenDescriptorBase {
   @Override
   public void generateText(final TextGenContext ctx) {
     final TextGenSupport tgs = new TextGenSupport(ctx);
     SNode n = ctx.getPrimaryInput();
-    tgs.append("CREATE TABLE IF NOT EXISTS ");
-    tgs.append("_users_");
-    tgs.append(" (\n");
-    tgs.append("    ");
-    tgs.append("id");
-    tgs.append("            BIGSERIAL       PRIMARY KEY,\n");
-    tgs.append("    ");
-    tgs.append("_username_");
-    tgs.append("      TEXT            NOT NULL UNIQUE,\n");
-    tgs.append("    ");
-    tgs.append("_email_");
-    tgs.append("         TEXT            NOT NULL UNIQUE,\n");
+    SNode models = SLinkOperations.getTarget(n, LINKS.targetScemaFilde$2OUX);
 
-    tgs.append("    ");
-    tgs.append("_password_");
-    tgs.append("       TEXT            NOT NULL,\n");
-    tgs.append("    ");
-    tgs.append("_first_name_");
-    tgs.append("    TEXT            NOT NULL DEFAULT '',\n");
-    tgs.append("    ");
-    tgs.append("_last_name_");
-    tgs.append("     TEXT            NOT NULL DEFAULT '',\n");
-    tgs.append("    ");
-    tgs.append("_is_active_");
-    tgs.append("     BOOLEAN         NOT NULL DEFAULT true,\n");
-    tgs.append("    ");
-    tgs.append("_created_at_");
-    tgs.append("    TIMESTAMPTZ     NOT NULL DEFAULT NOW(),\n");
-    tgs.append("    ");
-    tgs.append("_updated_at_");
-    tgs.append("    TIMESTAMPTZ     NOT NULL DEFAULT NOW()");
-    tgs.append("\n);\n");
+    tgs.append("-- ============================================================\n");
+    tgs.append("-- ");
+    tgs.append(SPropertyOperations.getString(models, PROPS.name$MnvL));
+    tgs.append(" Schema");
+    tgs.newLine();
+    tgs.append("-- ============================================================\n\n");
 
+    for (SNode s : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+      tgs.append("CREATE TABLE IF NOT EXISTS ");
+      tgs.append(SPropertyOperations.getString(s, PROPS.name$MnvL));
+      tgs.append(" (");
+      tgs.newLine();
+      tgs.append("    id            BIGSERIAL       PRIMARY KEY");
+      for (SNode f : ListSequence.fromList(SLinkOperations.getChildren(s, LINKS.Fields$wW_v))) {
+        ctx.getBuffer().area().increaseIndent();
+        tgs.append(",");
+        tgs.newLine();
+        {
+          final SNode fp = f;
+          if (SNodeOperations.isInstanceOf(fp, CONCEPTS.Field$YI)) {
+            tgs.indent();
+            tgs.indent();
+            tgs.append(SPropertyOperations.getString(fp, PROPS.name$MnvL));
+            tgs.indent();
+            String a = "!!??!!";
 
-    tgs.append("CREATE TABLE IF NOT EXISTS ");
-    tgs.append("_roles_");
-    tgs.append(" (\n");
-    tgs.append("    ");
-    tgs.append("id");
-    tgs.append("            BIGSERIAL       PRIMARY KEY,\n");
-    tgs.append("    ");
-    tgs.append("_name_");
-    tgs.append("          TEXT            NOT NULL UNIQUE,\n");
-    tgs.append("    ");
-    tgs.append("_description_");
-    tgs.append("   TEXT            NOT NULL DEFAULT '',\n");
-    tgs.append("    ");
-    tgs.append("_created_at_");
-    tgs.append("    TIMESTAMPTZ     NOT NULL DEFAULT NOW()\n");
-    tgs.append(");\n");
+            switch (enumSwitchIndex.indexNullable(SPropertyOperations.getEnum(fp, PROPS.dataType$lMLn))) {
+              case 0:
+                a = "BINGINT";
+                break;
+              case 1:
+                a = "BOOLEAN";
+                break;
+              case 2:
+                a = "FLOAT";
+                break;
+              case 3:
+                a = "TEXT";
+                break;
+              case 4:
+                a = "TIMESTAMPTZ";
+                break;
+            }
+            tgs.indent();
+            tgs.append(a);
+            tgs.indent();
+            tgs.append((SPropertyOperations.getBoolean(fp, PROPS.CanBeNull$1uB2) ? "" : "NOT NULL"));
 
+          }
+        }
+        {
+          final SNode fr = f;
+          if (SNodeOperations.isInstanceOf(fr, CONCEPTS.FieldRefrence$yH)) {
+            tgs.indent();
+            tgs.indent();
+            tgs.append(SPropertyOperations.getString(fr, PROPS.name$MnvL));
+            tgs.indent();
+            tgs.append(" BIGINT NOT NULL REFERENCES ");
+            tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(fr, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+            tgs.append("(id) ON DELETE CASCADE");
+          }
+        }
+        ctx.getBuffer().area().decreaseIndent();
+      }
+      tgs.append("\n);\n\n");
+    }
+    tgs.append("-- Indexes\n");
 
-    tgs.append("CREATE TABLE IF NOT EXISTS ");
-    tgs.append("_user_roles_");
-    tgs.append(" (\n");
-    tgs.append(");\n");
+    for (SNode sc : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+      for (SNode fh : ListSequence.fromList(SLinkOperations.getChildren(sc, LINKS.Fields$wW_v))) {
+        {
+          final SNode fp = fh;
+          if (SNodeOperations.isInstanceOf(fp, CONCEPTS.Field$YI)) {
+            if (SPropertyOperations.getBoolean(fp, PROPS.Index$cqlT)) {
+              tgs.append("CREATE INDEX IF NOT EXISTS idx_");
+              tgs.append(SPropertyOperations.getString(sc, PROPS.name$MnvL));
+              tgs.append("_");
+              tgs.append(SPropertyOperations.getString(fp, PROPS.name$MnvL));
+              tgs.append(" ON ");
+              tgs.append(SPropertyOperations.getString(sc, PROPS.name$MnvL));
+              tgs.append("(");
+              tgs.append(SPropertyOperations.getString(fp, PROPS.name$MnvL));
+              tgs.append(");\n");
+            }
+          }
+        }
+      }
+    }
+  }
+  private static final EnumerationLiteralsIndex enumSwitchIndex = EnumerationLiteralsIndex.build(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4cb86dL, 0x6dd41c940b4cb86eL, 0x6dd41c940b4cb871L, 0x6dd41c940b4cb870L, 0x6dd41c940b4cb86fL, 0x6dd41c940b4cb872L);
 
+  private static final class LINKS {
+    /*package*/ static final SReferenceLink targetScemaFilde$2OUX = MetaAdapterFactory.getReferenceLink(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b625dc7L, 0x6dd41c940b625dc8L, "targetScemaFilde");
+    /*package*/ static final SReferenceLink target_schema$EJM0 = MetaAdapterFactory.getReferenceLink(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4cbd4dL, 0x6dd41c940b4cbd51L, "target_schema");
+    /*package*/ static final SContainmentLink Fields$wW_v = MetaAdapterFactory.getContainmentLink(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c9L, 0x6dd41c940b4ca8ccL, "Fields");
+    /*package*/ static final SContainmentLink schemas$wVBY = MetaAdapterFactory.getContainmentLink(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8c6L, 0x6dd41c940b4ca8c8L, "schemas");
+  }
+
+  private static final class PROPS {
+    /*package*/ static final SProperty name$MnvL = MetaAdapterFactory.getProperty(0xceab519525ea4f22L, 0x9b92103b95ca8c0cL, 0x110396eaaa4L, 0x110396ec041L, "name");
+    /*package*/ static final SProperty dataType$lMLn = MetaAdapterFactory.getProperty(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8cdL, 0x6dd41c940b4cb86cL, "dataType");
+    /*package*/ static final SProperty CanBeNull$1uB2 = MetaAdapterFactory.getProperty(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8cdL, 0x6dd41c940b6ad1d6L, "CanBeNull");
+    /*package*/ static final SProperty Index$cqlT = MetaAdapterFactory.getProperty(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8cdL, 0x6dd41c940b4cbd49L, "Index");
+  }
+
+  private static final class CONCEPTS {
+    /*package*/ static final SConcept Field$YI = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4ca8cdL, "uman.structure.Field");
+    /*package*/ static final SConcept FieldRefrence$yH = MetaAdapterFactory.getConcept(0x1347621f0e534de9L, 0xa4526f9ea85ed21fL, 0x6dd41c940b4cbd4dL, "uman.structure.FieldRefrence");
   }
 }
