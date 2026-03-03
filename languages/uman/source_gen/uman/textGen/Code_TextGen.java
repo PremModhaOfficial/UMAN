@@ -15,6 +15,7 @@ import uman.behavior.Field__BehaviorDescriptor;
 import jetbrains.mps.internal.collections.runtime.Sequence;
 import uman.behavior.FieldRefrence__BehaviorDescriptor;
 import jetbrains.mps.baseLanguage.closures.runtime.Wrappers;
+import jetbrains.mps.baseLanguage.closures.runtime._FunctionTypes;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
 import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
@@ -26,7 +27,7 @@ public class Code_TextGen extends TextGenDescriptorBase {
   public void generateText(final TextGenContext ctx) {
     final TextGenSupport tgs = new TextGenSupport(ctx);
     SNode n = ctx.getPrimaryInput();
-    SNode models = SLinkOperations.getTarget(n, LINKS.models$9yIw);
+    final SNode models = SLinkOperations.getTarget(n, LINKS.models$9yIw);
     SNode infra = SLinkOperations.getTarget(n, LINKS.infra$9yXx);
 
     tgs.append("package main\n\nimport (\n\t\"database/sql\"\n\t_ \"embed\"\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"log\"\n\t\"net/http\"\n\t\"os\"\n\t\"strconv\"\n\t\"time\"\n\n\t_ \"github.com/lib/pq\"\n\thttpSwagger \"github.com/swaggo/http-swagger\"\n\t_ \"");
@@ -322,24 +323,464 @@ public class Code_TextGen extends TextGenDescriptorBase {
 
 
 
+    for (final SNode schema : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+      if ((boolean) Schema__BehaviorDescriptor.hasReferences_id4RkLmywWXpy.invoke(schema)) {
+        String sn = Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(schema);
+        final String rn = Schema__BehaviorDescriptor.repoName_id4RkLmywWUlE.invoke(schema);
+        final String tn = SPropertyOperations.getString(schema, PROPS.name$MnvL);
+
+        tgs.append("type ");
+        tgs.append(rn);
+        tgs.append(" struct{ db *sql.DB }\n\n");
+        // Assign
+        tgs.append("func (r *");
+        tgs.append(rn);
+        tgs.append(") Assign(");
+        final Wrappers._int argIdx = new Wrappers._int(0);
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+          if (argIdx.value > 0) {
+            tgs.append(", ");
+          }
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+          tgs.append(" int64");
+          argIdx.value++;
+        });
+        // query
+        tgs.append(") (*");
+        tgs.append(sn);
+        tgs.append(", error) {\n\tur := &");
+        tgs.append(sn);
+        tgs.append("{}\n\terr := r.db.QueryRow(\n\t\t`INSERT INTO ");
+        tgs.append(tn);
+        tgs.append(" (");
+        final Wrappers._int finx = new Wrappers._int(0);
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+          if (finx.value > 0) {
+            tgs.append(", ");
+          }
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+          finx.value++;
+        });
+        tgs.append(") VALUES (");
+        for (int i = 1; i <= finx.value; i++) {
+          if (i > 1) {
+            tgs.append(", ");
+          }
+          tgs.append("$");
+          tgs.append(i + "");
+        }
+        tgs.append(")\n\t\t ON CONFLICT (");
+        final Wrappers._int ckIdx = new Wrappers._int(0);
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+          if (ckIdx.value > 0) {
+            tgs.append(", ");
+          }
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+          ckIdx.value++;
+        });
+
+        tgs.append(") DO NOTHING\n\t\t RETURNING ");
+        final Wrappers._int retIdx = new Wrappers._int(0);
+        ListSequence.fromList(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v)).visitAll((it) -> {
+          if (retIdx.value > 0) {
+            tgs.append(", ");
+          }
+          {
+            final SNode fr = it;
+            if (SNodeOperations.isInstanceOf(fr, CONCEPTS.FieldRefrence$yH)) {
+              tgs.append(SPropertyOperations.getString(fr, PROPS.name$MnvL));
+            }
+          }
+          {
+            final SNode f = it;
+            if (SNodeOperations.isInstanceOf(f, CONCEPTS.Field$YI)) {
+              tgs.append(SPropertyOperations.getString(f, PROPS.name$MnvL));
+            }
+          }
+          retIdx.value++;
+        });
+        tgs.append("`,\n");
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+          tgs.append("\t\t");
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+          tgs.append(",\n");
+        });
+        tgs.append("\t).Scan(");
+        final Wrappers._int scanIdx = new Wrappers._int(0);
+        ListSequence.fromList(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v)).visitAll((it) -> {
+
+          if (scanIdx.value > 0) {
+            {
+              final SNode f = it;
+              if (SNodeOperations.isInstanceOf(f, CONCEPTS.Field$YI)) {
+                tgs.append("&ur.");
+                tgs.append(Field__BehaviorDescriptor.pascalName_id4TZlN6thmic.invoke(f));
+              }
+            }
+            {
+              final SNode f = it;
+              if (SNodeOperations.isInstanceOf(f, CONCEPTS.FieldRefrence$yH)) {
+                tgs.append("&ur.");
+                tgs.append(FieldRefrence__BehaviorDescriptor.pascalName_id4RkLmywXs7j.invoke(f));
+              }
+            }
+            scanIdx.value++;
+          }
+        });
+        tgs.append(")\n\treturn ur, err\n}\n\n");
+
+        //  Remove
+        tgs.append("func (r *");
+        tgs.append(rn);
+        tgs.append(") Remove(");
+        final Wrappers._int rmInd = new Wrappers._int(0);
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+          if (rmInd.value > 0) {
+            tgs.append(", ");
+          }
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+          tgs.append(" int64");
+          rmInd.value++;
+        });
+        tgs.append(") error {\n\t_, err := r.db.Exec(`DELETE FROM ");
+        tgs.append(tn);
+        tgs.append(" WHERE ");
+        final Wrappers._int wIdx = new Wrappers._int(0);
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+          if (wIdx.value > 0) {
+            tgs.append(" AND ");
+          }
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+          tgs.append(" int64");
+          wIdx.value++;
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+          tgs.append(" = $");
+          tgs.append(wIdx.value + "");
+        });
+        tgs.append("`");
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+
+          tgs.append(", ");
+          tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+        });
+        tgs.append(")\n\treturn err\n}\n\n");
+
+
+        // Cross-queries
+
+        Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll((it) -> {
+
+          final SNode frA = it;
+          Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v), CONCEPTS.FieldRefrence$yH)).visitAll(new _FunctionTypes._void_P1_E0<SNode>() {
+            public void invoke(SNode it) {
+              SNode frB = it;
+              String ts = Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(frB, LINKS.target_schema$EJM0));
+              String tt = SPropertyOperations.getString(SLinkOperations.getTarget(frB, LINKS.target_schema$EJM0), PROPS.name$MnvL);
+              tgs.append("func (r *");
+              tgs.append(rn);
+              tgs.append(") Get");
+              tgs.append(ts);
+              tgs.append("sBy");
+              tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(frA, LINKS.target_schema$EJM0)));
+              tgs.append("(");
+              tgs.append(SPropertyOperations.getString(frA, PROPS.name$MnvL));
+              tgs.append(" int64) ([]");
+              tgs.append(ts);
+              tgs.append(", error) {\n\trows, err := r.db.Query(\n\t\t`SELECT t.id");
+              Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(SLinkOperations.getTarget(frB, LINKS.target_schema$EJM0), LINKS.Fields$wW_v), CONCEPTS.Field$YI)).visitAll(new _FunctionTypes._void_P1_E0<SNode>() {
+                public void invoke(SNode it) {
+                  tgs.append(", t.");
+                  tgs.append(SPropertyOperations.getString(it, PROPS.name$MnvL));
+                }
+              });
+              tgs.append("\n\t\t FROM ");
+              tgs.append(tt);
+              tgs.append(" t\n\t\t INNER JOIN ");
+              tgs.append(tn);
+              tgs.append(" j ON j.");
+              tgs.append(SPropertyOperations.getString(frB, PROPS.name$MnvL));
+              tgs.append(" = t.id\n\t\t WHERE j.");
+              tgs.append(SPropertyOperations.getString(frA, PROPS.name$MnvL));
+              tgs.append(" = $1\n\t\t ORDER BY t.id`, ");
+              tgs.append(SPropertyOperations.getString(frA, PROPS.name$MnvL));
+              tgs.append(",\n\t)\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\tdefer rows.Close()\n\tvar items []");
+              tgs.append(ts);
+              tgs.append("\n\tfor rows.Next() {\n\t\tvar item ");
+              tgs.append(ts);
+              tgs.append("\n\t\tif err := rows.Scan(&item.ID");
+              Sequence.fromIterable(SNodeOperations.ofConcept(SLinkOperations.getChildren(SLinkOperations.getTarget(frB, LINKS.target_schema$EJM0), LINKS.Fields$wW_v), CONCEPTS.Field$YI)).visitAll(new _FunctionTypes._void_P1_E0<SNode>() {
+                public void invoke(SNode it) {
+                  tgs.append(", &item.");
+                  tgs.append(Field__BehaviorDescriptor.pascalName_id4TZlN6thmic.invoke(it));
+                }
+              });
+              tgs.append("); err != nil {\n\t\t\treturn nil, err\n\t\t}\n\t\titems = append(items, item)\n\t}\n\treturn items, rows.Err()\n}\n\n");
+            }
+          });
+
+        });
+      }
+    }
+
+    // ============================================================
+    // HTTP Handlers — regular schemas
+    // ============================================================
+
+    ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY)).where((it) -> !((boolean) Schema__BehaviorDescriptor.hasReferences_id4RkLmywWXpy.invoke(it))).visitAll((it) -> {
+
+
+      String sn = Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(it);
+      String rn = Schema__BehaviorDescriptor.repoName_id4RkLmywWUlE.invoke(it);
+
+      tgs.append("// ============================================================\n// HTTP Handlers — ");
+      tgs.append(sn);
+      tgs.append("\n// ============================================================\n\n");
+
+      // Create handler
+      tgs.append("func handleCreate");
+      tgs.append(sn);
+      tgs.append("(repo *");
+      tgs.append(rn);
+      tgs.append(") http.HandlerFunc {\n\treturn func(w http.ResponseWriter, r *http.Request) {\n\t\tvar u ");
+      tgs.append(sn);
+      tgs.append("\n\t\tif err := json.NewDecoder(r.Body).Decode(&u); err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tif err := repo.Create(&u); err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusInternalServerError)\n\t\t\treturn\n\t\t}\n\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n\t\tw.WriteHeader(http.StatusCreated)\n\t\tjson.NewEncoder(w).Encode(u)\n\t}\n}\n\n");
+
+
+      // Get handler
+      tgs.append("func handleGet");
+      tgs.append(sn);
+      tgs.append("(repo *");
+      tgs.append(rn);
+      tgs.append(") http.HandlerFunc {\n\treturn func(w http.ResponseWriter, r *http.Request) {\n\t\tidStr := r.PathValue(\"id\")\n\t\tid, err := strconv.ParseInt(idStr, 10, 64)\n\t\tif err != nil {\n\t\t\thttp.Error(w, \"invalid id\", http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tu, err := repo.GetByID(id)\n\t\tif err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusNotFound)\n\t\t\treturn\n\t\t}\n\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n\t\tjson.NewEncoder(w).Encode(u)\n\t}\n}\n\n");
+
+      // Update handler
+      tgs.append("func handleUpdate");
+      tgs.append(sn);
+      tgs.append("(repo *");
+      tgs.append(rn);
+      tgs.append(") http.HandlerFunc {\n\treturn func(w http.ResponseWriter, r *http.Request) {\n\t\tidStr := r.PathValue(\"id\")\n\t\tid, err := strconv.ParseInt(idStr, 10, 64)\n\t\tif err != nil {\n\t\t\thttp.Error(w, \"invalid id\", http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tvar u ");
+      tgs.append(sn);
+      tgs.append("\n\t\tif err := json.NewDecoder(r.Body).Decode(&u); err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tu.ID = id\n\t\tif err := repo.Update(&u); err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusInternalServerError)\n\t\t\treturn\n\t\t}\n\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n\t\tjson.NewEncoder(w).Encode(u)\n\t}\n}\n\n");
+
+
+      // Delete handler
+      tgs.append("func handleDelete");
+      tgs.append(sn);
+      tgs.append("(repo *");
+      tgs.append(rn);
+      tgs.append(") http.HandlerFunc {\n\treturn func(w http.ResponseWriter, r *http.Request) {\n\t\tidStr := r.PathValue(\"id\")\n\t\tid, err := strconv.ParseInt(idStr, 10, 64)\n\t\tif err != nil {\n\t\t\thttp.Error(w, \"invalid id\", http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tif err := repo.Delete(id); err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusInternalServerError)\n\t\t\treturn\n\t\t}\n\t\tw.WriteHeader(http.StatusNoContent)\n\t}\n}\n\n");
+
+
+
+      // ============================================================
+      // ============================================================
+      // HTTP Handlers — join schemas
+      // ============================================================
+
+      for (SNode schema : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+        if ((boolean) Schema__BehaviorDescriptor.hasReferences_id4RkLmywWXpy.invoke(schema)) {
+          String sn2 = Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(schema);
+          String rn2 = Schema__BehaviorDescriptor.repoName_id4RkLmywWUlE.invoke(schema);
+          tgs.append("// ============================================================\n// HTTP Handlers — ");
+          tgs.append(sn2);
+          tgs.append(" (assignments)\n// ============================================================\n\n");
+
+          SNode firstRef = null;
+          SNode secondRed = null;
+          for (SNode f : ListSequence.fromList(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v))) {
+            {
+              final SNode fr = f;
+              if (SNodeOperations.isInstanceOf(fr, CONCEPTS.FieldRefrence$yH)) {
+                if (fr == null) {
+                  firstRef = fr;
+                } else if (secondRed == null) {
+                  secondRed = fr;
+                }
+              }
+            }
+          }
+          // Assign handler
+          tgs.append("func handleAssign");
+          tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(secondRed, LINKS.target_schema$EJM0)));
+          tgs.append("(urRepo *");
+          tgs.append(rn2);
+          tgs.append(") http.HandlerFunc {\n\treturn func(w http.ResponseWriter, r *http.Request) {\n\t\t} ${firstRef.name} {, err := strconv.ParseInt(r.PathValue(\"id\"), 10, 64)\n\t\tif err != nil {\n\t\t\thttp.Error(w, \"invalid id\", http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tvar body Assign} ${secondRef.target_schema.structName()} {Body\n\t\tif err := json.NewDecoder(r.Body).Decode(&body); err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tur, err := urRepo.Assign(} ${firstRef.name} {, body.} ${secondRef.pascalName()} {)\n\t\tif err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusInternalServerError)\n\t\t\treturn\n\t\t}\n\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n\t\tw.WriteHeader(http.StatusCreated)\n\t\tjson.NewEncoder(w).Encode(ur)\n\t}\n}\n\n");
+
+
+          // Remove handler
+          tgs.append("func handleRemove");
+          tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(secondRed, LINKS.target_schema$EJM0)));
+          tgs.append("(urRepo *");
+          tgs.append(rn2);
+          tgs.append(") http.HandlerFunc {\n\treturn func(w http.ResponseWriter, r *http.Request) {\n\t\t} ${firstRef.name} {, err := strconv.ParseInt(r.PathValue(\"id\"), 10, 64)\n\t\tif err != nil {\n\t\t\thttp.Error(w, \"invalid id\", http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\t} ${secondRef.name} {, err := strconv.ParseInt(r.PathValue(\"} ${secondRef.name} {\"), 10, 64)\n\t\tif err != nil {\n\t\t\thttp.Error(w, \"invalid id\", http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\tif err := urRepo.Remove(} ${firstRef.name} {, } ${secondRef.name} {); err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusInternalServerError)\n\t\t\treturn\n\t\t}\n\t\tw.WriteHeader(http.StatusNoContent)\n\t}\n}\n\n");
+
+          // Cross-query handlers
+
+          for (SNode refA : ListSequence.fromList(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v))) {
+            {
+              final SNode frA = refA;
+              if (SNodeOperations.isInstanceOf(frA, CONCEPTS.FieldRefrence$yH)) {
+                for (SNode refB : ListSequence.fromList(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v))) {
+                  {
+                    final SNode frB = refB;
+                    if (SNodeOperations.isInstanceOf(frB, CONCEPTS.FieldRefrence$yH)) {
+                      tgs.append("func handleGet");
+                      tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(frA, LINKS.target_schema$EJM0)));
+                      tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(frB, LINKS.target_schema$EJM0)));
+                      tgs.append("s(urRepo *");
+                      tgs.append(rn2);
+                      tgs.append(") http.HandlerFunc {\n\treturn func(w http.ResponseWriter, r *http.Request) {\n\t\tid, err := strconv.ParseInt(r.PathValue(\"id\"), 10, 64)\n\t\tif err != nil {\n\t\t\thttp.Error(w, \"invalid id\", http.StatusBadRequest)\n\t\t\treturn\n\t\t}\n\t\titems, err := urRepo.Get} ${frB.target_schema.structName()} {sBy} ${frA.target_schema.structName()} {(id)\n\t\tif err != nil {\n\t\t\thttp.Error(w, err.Error(), http.StatusInternalServerError)\n\t\t\treturn\n\t\t}\n\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n\t\tjson.NewEncoder(w).Encode(items)\n\t}\n}\n\n");
+                    }
+                  }
+                }
+              }
+            }
+
+          }
 
 
 
 
+        }
+      }
+      // Main
+      // ============================================================
+
+      tgs.append("// ============================================================\n// Main\n// ============================================================\n\nfunc main() {\n\tdbURL := os.Getenv(\"DATABASE_URL\")\n\tif dbURL == \"\" {\n\t\tdbURL = \"postgres://} ${infra.dbUser} {:} ${infra.dbPass} {@localhost:5432/} ${infra.dbName} {?sslmode=disable\"\n\t}\n\n\tdb, err := sql.Open(\"postgres\", dbURL)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\tdefer db.Close()\n\n\tfor i := 0; i < 5; i++ {\n\t\tif err = db.Ping(); err == nil {\n\t\t\tbreak\n\t\t}\n\t\tlog.Printf(\"DB not ready, retrying... (%d/5)\", i+1)\n\t\ttime.Sleep(2 * time.Second)\n\t}\n\tif err != nil {\n\t\tlog.Fatal(\"DB connection failed:\", err)\n\t}\n\n\tif _, err := db.Exec(migrationSQL); err != nil {\n\t\tlog.Fatal(err)\n\t}\n\tlog.Println(\"Migration complete\")\n\n");
+      for (SNode schema : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+        if (!((boolean) Schema__BehaviorDescriptor.hasReferences_id4RkLmywWXpy.invoke(schema))) {
+          tgs.append("\t");
+          tgs.append(Schema__BehaviorDescriptor.singularName_id4RkLmywWNem.invoke(schema));
+          tgs.append("Repo := &");
+          tgs.append(Schema__BehaviorDescriptor.repoName_id4RkLmywWUlE.invoke(schema));
+          tgs.append("{db: db}\n");
+        }
+      }
+      for (SNode schema : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+        if ((boolean) Schema__BehaviorDescriptor.hasReferences_id4RkLmywWXpy.invoke(schema)) {
+          tgs.append("\t");
+          tgs.append(Schema__BehaviorDescriptor.singularName_id4RkLmywWNem.invoke(schema));
+          tgs.append("Repo := &");
+          tgs.append(Schema__BehaviorDescriptor.repoName_id4RkLmywWUlE.invoke(schema));
+          tgs.append("{db: db}\n");
+        }
+      }
+      tgs.append("\n\tmux := http.NewServeMux()\n\n\t// Swagger UI\n\tmux.HandleFunc(\"GET /swagger/*\", httpSwagger.WrapHandler)\n\n");
+    });
 
 
+    // Regular routes
 
+    for (SNode schema : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+      if (!((boolean) Schema__BehaviorDescriptor.hasReferences_id4RkLmywWXpy.invoke(schema))) {
+        String vr = Schema__BehaviorDescriptor.singularName_id4RkLmywWNem.invoke(schema) + "Repo";
+        String sn = Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(schema);
+        String tn = SPropertyOperations.getString(schema, PROPS.name$MnvL);
+        tgs.append("\t// ");
+        tgs.append(sn);
+        tgs.append("s\n\tmux.HandleFunc(\"POST /");
+        tgs.append(tn);
+        tgs.append("\", handleCreate");
+        tgs.append(sn);
+        tgs.append("))\n\tmux.HandleFunc(\"GET /");
+        tgs.append(tn);
+        tgs.append("\", handleList");
+        tgs.append(sn);
+        tgs.append("s(");
+        tgs.append(vr);
+        tgs.append("))\n\tmux.HandleFunc(\"GET /");
+        tgs.append(tn);
+        tgs.append("/{id}\", handleGet");
+        tgs.append(sn);
+        tgs.append("(");
+        tgs.append(vr);
+        tgs.append("))\n\tmux.HandleFunc(\"PUT /");
+        tgs.append(tn);
+        tgs.append("/{id}\", handleUpdate");
+        tgs.append(sn);
+        tgs.append("(");
+        tgs.append(vr);
+        tgs.append("))\n\tmux.HandleFunc(\"DELETE /");
+        tgs.append(tn);
+        tgs.append("/{id}\", handleDelete");
+        tgs.append(sn);
+        tgs.append("(");
+        tgs.append(sn);
+        tgs.append("(");
+        tgs.append(vr);
+        tgs.append("))\n\n");
 
+      }
+    }
+    // Join routes
+    for (SNode schema : ListSequence.fromList(SLinkOperations.getChildren(models, LINKS.schemas$wVBY))) {
+      if ((boolean) Schema__BehaviorDescriptor.hasReferences_id4RkLmywWXpy.invoke(schema)) {
+        String vr = Schema__BehaviorDescriptor.singularName_id4RkLmywWNem.invoke(schema) + "Repo";
 
+        SNode fRef = null;
+        SNode sRef = null;
 
+        for (SNode field : ListSequence.fromList(SLinkOperations.getChildren(schema, LINKS.Fields$wW_v))) {
+          {
+            final SNode fr = field;
+            if (SNodeOperations.isInstanceOf(fr, CONCEPTS.FieldRefrence$yH)) {
+              if (fr == null) {
+                fRef = fr;
+              } else if (sRef == null) {
+                sRef = fr;
+              }
+            }
+          }
+        }
+        tgs.append("\t// ");
+        tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(schema));
+        tgs.append(" assignments\n\tmux.HandleFunc(\"POST /");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("/{id}/");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("\", handleAssign");
+        tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0)));
+        tgs.append("(");
+        tgs.append(vr);
+        tgs.append("))\n\tmux.HandleFunc(\"DELETE /");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(fRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("/{id}/");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("/{");
+        tgs.append(SPropertyOperations.getString(sRef, PROPS.name$MnvL));
+        tgs.append("}\", handleRemove");
+        tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0)));
+        tgs.append("(");
+        tgs.append(vr);
+        tgs.append("))\n\tmux.HandleFunc(\"GET /");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(fRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("/{id}/");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("\", handleGet");
+        tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(fRef, LINKS.target_schema$EJM0)));
+        tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0)));
+        tgs.append("s(");
+        tgs.append(vr);
+        tgs.append("))\n\tmux.HandleFunc(\"GET /");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("/{id}/");
+        tgs.append(SPropertyOperations.getString(SLinkOperations.getTarget(fRef, LINKS.target_schema$EJM0), PROPS.name$MnvL));
+        tgs.append("\", handleGet");
+        tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(sRef, LINKS.target_schema$EJM0)));
+        tgs.append(Schema__BehaviorDescriptor.structName_id4RkLmywWSH4.invoke(SLinkOperations.getTarget(fRef, LINKS.target_schema$EJM0)));
+        tgs.append("s(");
+        tgs.append(vr);
+        tgs.append("))\n\n");
+      }
+    }
 
-
-
-
-
-
-
-
+    tgs.append("\tfmt.Println(\"Serving on :");
+    tgs.append(SPropertyOperations.getInteger(infra, PROPS.port$RtZw) + "");
+    tgs.append("\")\n\tfmt.Println(\"Swagger UI: http://localhost:");
+    tgs.append(SPropertyOperations.getInteger(infra, PROPS.port$RtZw) + "");
+    tgs.append("/swagger/index.html\")\n\tlog.Fatal(http.ListenAndServe(\":");
+    tgs.append(SPropertyOperations.getInteger(infra, PROPS.port$RtZw) + "");
+    tgs.append("\", mux))\n}\n");
   }
 
   private static final class LINKS {
